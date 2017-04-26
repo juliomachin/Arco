@@ -16,6 +16,11 @@ public:
     explicit coma_flotante(QWidget *parent = 0);
     ~coma_flotante();
     string toFloatingPoint( float variable );
+    bool comparar(bitset<8> exp1, bitset<8> exp2);
+
+    int sumaBinaria(int sum1, int sum2, int len);
+    int restaBinaria(int sum1, int sum2);
+    int toDecimal(int x);
 
 
 private slots:
@@ -31,6 +36,8 @@ private:
     Ui::coma_flotante *ui;
     bitset<32> n1;
     bitset <32> n2;
+    bool carry;
+
 };
 
 #endif // COMA_FLOTANTE_H
