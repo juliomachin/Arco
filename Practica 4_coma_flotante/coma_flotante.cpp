@@ -172,6 +172,7 @@ void coma_flotante::on_suma_clicked()
         int a = toDecimal(hex);
     }else{
         if(e1.to_ulong()<e2.to_ulong()){
+            cout << "entro" << endl;
             bitset<8> aux(0);
             aux = e1;
             e1= e2;
@@ -180,35 +181,61 @@ void coma_flotante::on_suma_clicked()
             aux1 = m1;
             m1= m2;
             m2 = aux1;
+       }
+         if(n1.to_ulong()<n2.to_ulong()){
+            bool auxs = s1;
+            s1 = s2;
+            s2 = auxs;
+
         }
+        cout << "exp1 " << e1 << endl;
+        cout << "exp2 " << e2 << endl;
+
         //Hallamos la diferencia
         int d = restaBinaria((int) e1.to_ulong(),(int) e2.to_ulong());
-        bitset <23> comp = ~m2;
-        int maux = sumaBinaria(comp.to_ulong(),1,23) ;
-        bitset<32> ma(maux);
-        cout <<"complemento "<< comp << endl;
 
-        cout <<"complemento "<< ma << endl;
+
         //Desplazamos d la mantisa y sumamos al exponente hasta igualarlos
         carry = false;
         int exp = sumaBinaria((int) e2.to_ulong(),d, 8);
         int dif = d;
         if(d>0){
-            ma.operator >>=(1);
+            m2.operator >>=(1);
+            m2[22] = 1;
             d--;
         }
         for(int i=0;i<d;i++){
-            ma.operator >>=(1);
-            ma[22] = 1;
+            m2.operator >>=(1);
+          //  ma[22] = 1;
         }
+        bitset <23> comp = ~m2;
+        int maux = sumaBinaria(comp.to_ulong(),1,23) ;
+        bitset<23> ma(maux);
         //Sumamos las mantisas
         carry = false;
         int mant = sumaBinaria(m1.to_ulong(),ma.to_ulong(), 23);
         bitset <23>  m(mant);
-        if(carry || dif==0){
+        if(!carry){
             carry = false;
-            exp = sumaBinaria(exp,1, 8);
-            m.operator << =(1);
+            exp = restaBinaria(exp,1);
+            m.operator <<=(1);
+        }
+        cout << m << endl;
+
+        if(dif==0){
+            int pos =22;
+            int diff = 1;
+            while(!m[pos]){
+                cout << "entro"<< endl;
+                diff = diff+1;
+                cout << diff << endl;
+
+                pos--;
+            }
+            cout << diff << endl;
+            exp = restaBinaria(exp,diff);
+            m.operator <<=(diff);
+
         }
         bitset <8>  er(exp);
 
