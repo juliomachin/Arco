@@ -171,7 +171,20 @@ void coma_flotante::on_suma_clicked()
         //Expresamos resultado en decimal
         int a = toDecimal(hex);
     }else{
-        if(e1.to_ulong()<e2.to_ulong()){
+        //DIFERENTE SIGNO
+        //Comprobamos si el negativo es mayor que el positivo en valor absoluto
+        if (s1){
+        //    abs = n1;
+             n1[31] = s2;
+        }
+        if(s2){
+            cout << "entro " << endl;
+            n2[31] = s1;
+
+        }
+        cout << n1 << endl;
+        cout << n2 << endl;
+    /*    if(e1.to_ulong()<e2.to_ulong()){
             cout << "entro" << endl;
             bitset<8> aux(0);
             aux = e1;
@@ -181,8 +194,18 @@ void coma_flotante::on_suma_clicked()
             aux1 = m1;
             m1= m2;
             m2 = aux1;
-       }
+       }*/
          if(n1.to_ulong()<n2.to_ulong()){
+             cout << "entro" << endl;
+             bitset<8> aux(0);
+             aux = e1;
+             e1= e2;
+             e2 = aux;
+             bitset<23> aux1(0);
+             aux1 = m1;
+             m1= m2;
+             m2 = aux1;
+             cout <<"ebtro"<<endl;
             bool auxs = s1;
             s1 = s2;
             s2 = auxs;
@@ -223,10 +246,10 @@ void coma_flotante::on_suma_clicked()
         cout << m << endl;
 
         if(dif==0){
+            cout << "entro"<< endl;
             int pos =22;
             int diff = 1;
             while(!m[pos]){
-                cout << "entro"<< endl;
                 diff = diff+1;
                 cout << diff << endl;
 
