@@ -213,7 +213,7 @@ void coma_flotante::on_suma_clicked()
             s2 = auxs;
 
         }
-        cout << "exp1 " << e1 << endl;
+    /*    cout << "exp1 " << e1 << endl;
         cout << "exp2 " << e2 << endl;
 
         //Hallamos la diferencia
@@ -233,13 +233,17 @@ void coma_flotante::on_suma_clicked()
             m2.operator >>=(1);
           //  ma[22] = 1;
         }
+
         bitset <23> comp = ~m2;
+
         int maux = sumaBinaria(comp.to_ulong(),1,23) ;
         bitset<23> ma(maux);
         //Sumamos las mantisas
         carry = false;
         int mant = sumaBinaria(m1.to_ulong(),ma.to_ulong(), 23);
         bitset <23>  m(mant);
+        cout << m << endl;
+
         if(!carry){
             carry = false;
             exp = restaBinaria(exp,1);
@@ -261,11 +265,116 @@ void coma_flotante::on_suma_clicked()
             m.operator <<=(diff);
 
         }
-        bitset <8>  er(exp);
 
+        */
+         //Paso 1
+         bool g=0; bool r=0; bool st=0;
+         int n = m1.size();
+         //Paso 3
+         int d = restaBinaria((int) e1.to_ulong(),(int) e2.to_ulong());
+
+         //Paso 4
+         bitset <23> comp = ~m2;
+         carry = false;
+         int maux = sumaBinaria(comp.to_ulong(),1,23) ;
+
+         //Paso 5
+         bitset<23> ma(maux);
+
+         //Paso 6
+         int aux = d;
+         if(aux>0){
+             g = ma[d-1];
+             aux--;
+         }
+         if (aux > 0){
+             r = ma [d-2];
+             aux--;
+         }
+         if(aux > 0){
+             aux = d;
+             //bool a = true;
+             while(aux > 0){
+                 sr = sr^ma[aux];
+                 aux--;
+             }
+         }
+         //Paso 7
+         aux = d;
+         for(int i=0;i<d;i++){
+             ma.operator >>=(1);
+             ma[22] = 1;
+         }
+         //Paso 8
+         carry = false;
+         int sum = sumaBinaria(m1.to_ulong(), ma.to_ulong(), 23);
+         bitset <23> maaux(sum);
+         ma = maaux;
+         //Paso 9
+         if(ma[n-1]==1 && !carry){
+             cout << "Paso 9" << endl;
+             bitset <23> comp = ~ma;
+             carry = false;
+             int  rescom = sumaBinaria(comp.to_ulong(),1,23) ;
+             bitset <23> maaux(rescom);
+             ma = maaux;
+             cout << ma << endl;
+         }
+
+         //Paso 10
+         cout << "Paso 10" << endl;
+
+         int pos = 22;
+         int k=0;
+         while(!ma[pos]){
+             k++;
+             pos--;
+         }
+         if(k==0){
+             st = r^st;
+             r = g;
+         }
+         if(k>0){
+             r = 0;
+             st = 0;
+         }
+         cout << ma << endl;
+
+         for(int i=0;i<k;i++){
+             cout << "entro a desplazar" << endl;
+             ma =  ma.operator <<(1);
+
+             // ma[22]=g;
+              cout << ma << endl;
+
+
+         }
+
+         int exp = restaBinaria(e1.to_ulong(), k);
+          cout << k << endl;
+          cout << ma << endl;
+         //Paso 11
+         if ((r==1 && st==1) || (r==1 && st==0 && ma[0]==1)){
+             carry = false;
+             int suma11 = sumaBinaria(ma.to_ulong(), 1, 23);
+             bitset <23> aux (suma11);
+             ma = aux;
+             if(carry){
+                 ma =  ma.operator >>(1);
+                 carry = false;
+                 exp = sumaBinaria(exp, 1, 8);
+
+
+             }
+         }
+
+
+        bitset <8>  er(exp);
+        cout << er << endl;
+        cout << ma << endl;
         int j=0;
         for(int i=0;i<23;i++){
-            res[i] = m[j];
+            res[i] = ma[j];
             j++;
         }
         j=0;
@@ -320,7 +429,7 @@ void coma_flotante::on_prod_clicked()
     cout << exp << endl;
 
 
-    int j=0;
+    j=0;
     for(int i=0;i<23;i++){
         res[i] = m[j];
         j++;
@@ -330,7 +439,7 @@ void coma_flotante::on_prod_clicked()
         res[i] = exp[j];
         j++;
     }
-    res[31] = s;
+    res[31] = sr;
     //Expresamos resultado en hexadecimal
     int hex = res.to_ulong();
     QString hexnum;
@@ -394,6 +503,7 @@ int coma_flotante:: sumaBinaria(int sum1, int sum2, int len){
         res[i]= sum;
 
     }
+
     int resdec = res.to_ulong();
 
     cout << "resultado "<<carry << endl;
