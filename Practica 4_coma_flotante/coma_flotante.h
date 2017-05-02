@@ -21,6 +21,7 @@ public:
     int sumaBinaria(int sum1, int sum2, int len);
     int restaBinaria(int sum1, int sum2);
     int toDecimal(int x);
+    int multBinaria(int mult1, int mult2);
 
 
 private slots:

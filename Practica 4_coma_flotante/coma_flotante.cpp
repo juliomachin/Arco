@@ -4,6 +4,8 @@
 #include <iostream>
 #include <math.h>
 #include <bitset>
+#include <stdexcept>
+
 using namespace std;
 
 
@@ -243,7 +245,6 @@ void coma_flotante::on_suma_clicked()
             exp = restaBinaria(exp,1);
             m.operator <<=(1);
         }
-        cout << m << endl;
 
         if(dif==0){
             cout << "entro"<< endl;
@@ -261,9 +262,6 @@ void coma_flotante::on_suma_clicked()
 
         }
         bitset <8>  er(exp);
-
-        cout << m << endl;
-        cout << er << endl;
 
         int j=0;
         for(int i=0;i<23;i++){
@@ -292,6 +290,58 @@ void coma_flotante::on_suma_clicked()
 //PRODUCTO
 void coma_flotante::on_prod_clicked()
 {
+    bitset<32> res(0);
+    bitset <8> e1, e2;
+    bitset <23> m1, m2, mr;
+    bool s1, s2, sr;
+    s1 = n1.test(31);
+    s2 = n2.test(31);
+    int j=7;
+    for(int i=30;i>22;i--){
+        e1[j]= n1[i];
+        e2[j]= n2[i];
+        j--;
+    }
+    j=22;
+    for(int i=22;i>=0;i--){
+        m1[j]= n1[i];
+        m2[j]= n2[i];
+        j--;
+    }
+    sr =  s1^s2;
+    //ESTO NO FUNCIONA
+    int mant = multBinaria(m1.to_ulong(), m2.to_ulong());
+    //mirar cuanto desplazar
+    bitset <24> m (mant);
+    //exponente
+    int e = sumaBinaria(e1.to_ulong(), e2.to_ulong(), 9);
+    e = restaBinaria(e, 127);
+    bitset <8> exp(e);
+    cout << exp << endl;
+
+
+    int j=0;
+    for(int i=0;i<23;i++){
+        res[i] = m[j];
+        j++;
+    }
+    j=0;
+    for(int i=23;i<32;i++){
+        res[i] = exp[j];
+        j++;
+    }
+    res[31] = s;
+    //Expresamos resultado en hexadecimal
+    int hex = res.to_ulong();
+    QString hexnum;
+    hexnum=QString::number(hex,16);
+    ui->reshex->setText(hexnum);
+    //Expresamos resultado en decimal
+    int a = toDecimal(hex);
+
+
+
+
 
 }
 //DIVISION
@@ -379,6 +429,38 @@ int coma_flotante:: restaBinaria(int sum1, int sum2){
     }
 
     return (int) res.to_ulong();
+
+}
+int coma_flotante::multBinaria(int mult1, int mult2){
+    bitset<24> x( mult1 );
+    bitset<24> y( mult2 );
+    //incluimos "Hidden bit"
+    x[23]= 1;
+    y[23]= 1;
+   // std::bitset tmp = x;
+    std::bitset<48> resbit;
+    int res =0;
+    int tam = y.size();
+    cout << tam << endl;
+
+    for(int i=0; i<24;i++){
+        if(y[i]==0){
+            x = x.operator <<(1);
+
+         //   resbit = resbit.operator <<(1);
+            cout << resbit << endl;
+        }else{
+            cout << "entro" << endl;
+           // x = x.operator <<(1);
+            int temp = sumaBinaria (resbit.to_ulong(), x.to_ulong(),48);
+            std::bitset<48> tmp (temp);
+            cout << resbit << endl;
+
+            resbit  = tmp;
+        }
+    }
+    cout << resbit << endl;
+
 
 }
 
