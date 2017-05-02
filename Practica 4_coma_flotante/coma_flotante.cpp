@@ -272,7 +272,7 @@ void coma_flotante::on_suma_clicked()
          int n = m1.size();
          //Paso 3
          int d = restaBinaria((int) e1.to_ulong(),(int) e2.to_ulong());
-
+            cout << "d " << d << endl;
          //Paso 4
          bitset <23> comp = ~m2;
          carry = false;
@@ -280,7 +280,7 @@ void coma_flotante::on_suma_clicked()
 
          //Paso 5
          bitset<23> ma(maux);
-
+           cout << "Mantisa comp 2 " << ma << endl;
          //Paso 6
          int aux = d;
          if(aux>0){
@@ -294,11 +294,17 @@ void coma_flotante::on_suma_clicked()
          if(aux > 0){
              aux = d;
              //bool a = true;
+             int resta = 3;
              while(aux > 0){
-                 sr = sr^ma[aux];
+                 bool p =ma[d-resta];
+                 cout << st << endl;
+
+                 st = st^p;
                  aux--;
+                 resta++;
              }
          }
+         cout << "g " << g << "r " << r << "st " << st << endl;
          //Paso 7
          aux = d;
          for(int i=0;i<d;i++){
@@ -310,6 +316,8 @@ void coma_flotante::on_suma_clicked()
          int sum = sumaBinaria(m1.to_ulong(), ma.to_ulong(), 23);
          bitset <23> maaux(sum);
          ma = maaux;
+         cout << "Paso 8" << endl;
+         cout << ma << endl;
          //Paso 9
          if(ma[n-1]==1 && !carry){
              cout << "Paso 9" << endl;
@@ -333,28 +341,29 @@ void coma_flotante::on_suma_clicked()
          if(k==0){
              st = r^st;
              r = g;
+             cout << g << endl;
          }
          if(k>0){
              r = 0;
              st = 0;
          }
          cout << ma << endl;
-
+         if(carry){
+             k= k-1;
+         }
          for(int i=0;i<k;i++){
              cout << "entro a desplazar" << endl;
              ma =  ma.operator <<(1);
-
-             // ma[22]=g;
-              cout << ma << endl;
-
-
          }
 
          int exp = restaBinaria(e1.to_ulong(), k);
           cout << k << endl;
           cout << ma << endl;
          //Paso 11
+          cout << "g " << g << "r " << r << "st " << st << endl;
+
          if ((r==1 && st==1) || (r==1 && st==0 && ma[0]==1)){
+             cout << "paso 11"<< endl;
              carry = false;
              int suma11 = sumaBinaria(ma.to_ulong(), 1, 23);
              bitset <23> aux (suma11);
