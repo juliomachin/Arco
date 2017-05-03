@@ -338,19 +338,28 @@ void coma_flotante::on_prod_clicked()
         j--;
     }
     sr =  s1^s2;
-    //ESTO NO FUNCIONA
-    int mant = multBinaria(m1.to_ulong(), m2.to_ulong());
-    //mirar cuanto desplazar
-    bitset <24> maux (mant);
-    cout << "mantisa sin normlizar" <<maux << endl;
-    if(maux[23] == 1){
-        maux[23] =0;
-    }
-    bitset <23> m (maux.to_ulong());
-    cout << "mantisa normlizada" << m << endl;
-    //exponente
+    carry = false;
     int e = sumaBinaria(e1.to_ulong(), e2.to_ulong(), 9);
     e = restaBinaria(e, 127);
+    //mantisa
+    int mant = multBinaria(m1.to_ulong(), m2.to_ulong());
+    //mirar cuanto desplazar
+    bitset <25> maux (mant);
+    cout << "mantisa sin normlizar" <<maux << endl;
+    if(maux[24]==1){
+        cout << "ebtro" << endl;
+        maux[24] =0;
+        carry = false;
+        e = sumaBinaria(e,1,8);
+        maux = maux.operator >>(1);
+    }else if(maux[23] == 1){
+        maux[23] =0;
+    }
+    cout << "mantisa norn " <<maux << endl;
+
+    bitset <23> m (maux.to_ulong());
+    cout << "mantisa normlizada" << m << endl;
+
     bitset <8> exp(e);
     cout << "exponenete " <<exp << endl;
 
@@ -382,6 +391,71 @@ void coma_flotante::on_prod_clicked()
 //DIVISION
 void coma_flotante::on_division_clicked()
 {
+    //Dividimos los numeros en mantisa, signo y exponente
+    bitset<32> res(0);
+    bitset <8> e1, e2;
+    bitset <23> m1, m2, mr;
+    bool s1, s2, sr;
+    s1 = n1.test(31);
+    s2 = n2.test(31);
+    int j=7;
+    for(int i=30;i>22;i--){
+        e1[j]= n1[i];
+        e2[j]= n2[i];
+        j--;
+    }
+    j=22;
+    for(int i=22;i>=0;i--){
+        m1[j]= n1[i];
+        m2[j]= n2[i];
+        j--;
+    }
+    //Comprobamos los tamaños
+    if(e1.operator ==(e2)){
+        if(m1.to_ulong()<m2.to_ulong()){
+            bitset <23> aux = m1;
+            m1 = m2;
+            m2  = aux;
+        }
+    }else{
+        if(e2.to_ulong()>e1.to_ulong()){
+            bitset <8> aux = e1;
+            e1 = e2;
+            e2 = aux;
+        }
+    }
+    //Sacamos el signo del resultado
+    sr =  s1^s2;
+    //Hallamos el exponenete
+    int er = restaBinaria(e1.to_ulong(), e2.to_ulong());
+    er = sumaBinaria(er, 127, 8);
+
+    bitset<8> exp (er);
+
+    //Dividimos las mantisas
+
+
+/*
+    j=0;
+    for(int i=0;i<23;i++){
+        res[i] = m[j];
+        j++;
+    }
+    j=0;
+    for(int i=23;i<32;i++){
+        res[i] = exp[j];
+        j++;
+    }
+    res[31] = sr;
+    //Expresamos resultado en hexadecimal
+    int hex = res.to_ulong();
+    QString hexnum;
+    hexnum=QString::number(hex,16);
+    ui->reshex->setText(hexnum);
+    //Expresamos resultado en decimal
+    int a = toDecimal(hex);
+
+*/
 
 }
 bool coma_flotante:: comparar(bitset<8> exp1, bitset<8> exp2){
@@ -486,8 +560,8 @@ int coma_flotante:: restaBinaria(int sum1, int sum2){
 
 }
 int coma_flotante::multBinaria(int mult1, int mult2){
-    bitset<24> x( mult1 );
-    bitset<24> y( mult2 );
+    bitset<25> x( mult1 );
+    bitset<25> y( mult2 );
     //incluimos "Hidden bit"
     x[23]= 1;
     y[23]= 1;
@@ -501,7 +575,7 @@ int coma_flotante::multBinaria(int mult1, int mult2){
     cout << "auxuliar " << aux << endl;
     int tam = y.size();
 
-    for(int i=0; i<24;i++){
+    for(int i=0; i<25;i++){
         if(y[i]==0){
         }else{
             cout << "i " <<i << endl;
@@ -522,7 +596,7 @@ int coma_flotante::multBinaria(int mult1, int mult2){
     resbit = resbit.operator >>(23);
     cout << resbit << endl;
 
-    bitset <24> mant (resbit.to_ulong());
+    bitset <25> mant (resbit.to_ullong());
     cout << mant << endl;
 
     return resbit.to_ulong();
@@ -587,3 +661,23 @@ long long coma_flotante:: sumaBinariaMult(long long sum1, long long sum2){
 
 
 }
+int divisionBinaria(int D, int d){
+    bitset <24> div1 (D);
+    bitset <24> div2 (d);
+    div1[23]= 1;
+    div2[23]= 1;
+    bitset <24> aux(0);
+    int k=0;
+    //Calculamos los bits efectivos
+    for(int i=0;i<24;i++){
+        if(div[i]==1){
+            k = 24 -i;
+            break;
+        }
+    }
+    int kaux = k;
+    for(int i=23;i>=0;i--){
+
+    }
+}
+
