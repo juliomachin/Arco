@@ -184,8 +184,11 @@ void coma_flotante::on_suma_clicked()
             n2[31] = s1;
 
         }
-        cout << n1 << endl;
-        cout << n2 << endl;
+        bool iguales = false;
+        if(n1.operator ==(n2)){
+            cout << "iguales" << endl;
+            iguales = true;
+        }
     /*    if(e1.to_ulong()<e2.to_ulong()){
             cout << "entro" << endl;
             bitset<8> aux(0);
@@ -198,7 +201,6 @@ void coma_flotante::on_suma_clicked()
             m2 = aux1;
        }*/
          if(n1.to_ulong()<n2.to_ulong()){
-             cout << "entro" << endl;
              bitset<8> aux(0);
              aux = e1;
              e1= e2;
@@ -213,170 +215,79 @@ void coma_flotante::on_suma_clicked()
             s2 = auxs;
 
         }
-    /*    cout << "exp1 " << e1 << endl;
-        cout << "exp2 " << e2 << endl;
-
-        //Hallamos la diferencia
-        int d = restaBinaria((int) e1.to_ulong(),(int) e2.to_ulong());
 
 
-        //Desplazamos d la mantisa y sumamos al exponente hasta igualarlos
-        carry = false;
-        int exp = sumaBinaria((int) e2.to_ulong(),d, 8);
-        int dif = d;
-        if(d>0){
-            m2.operator >>=(1);
-            m2[22] = 1;
-            d--;
-        }
-        for(int i=0;i<d;i++){
-            m2.operator >>=(1);
-          //  ma[22] = 1;
-        }
-
-        bitset <23> comp = ~m2;
-
-        int maux = sumaBinaria(comp.to_ulong(),1,23) ;
-        bitset<23> ma(maux);
-        //Sumamos las mantisas
-        carry = false;
-        int mant = sumaBinaria(m1.to_ulong(),ma.to_ulong(), 23);
-        bitset <23>  m(mant);
-        cout << m << endl;
-
-        if(!carry){
-            carry = false;
-            exp = restaBinaria(exp,1);
-            m.operator <<=(1);
-        }
-
-        if(dif==0){
-            cout << "entro"<< endl;
-            int pos =22;
-            int diff = 1;
-            while(!m[pos]){
-                diff = diff+1;
-                cout << diff << endl;
-
-                pos--;
-            }
-            cout << diff << endl;
-            exp = restaBinaria(exp,diff);
-            m.operator <<=(diff);
-
-        }
-
-        */
-         //Paso 1
-         bool g=0; bool r=0; bool st=0;
-         int n = m1.size();
-         //Paso 3
+         //TERCER INTENTO
+         //Resta de exponenetes
          int d = restaBinaria((int) e1.to_ulong(),(int) e2.to_ulong());
-            cout << "d " << d << endl;
-         //Paso 4
-         bitset <23> comp = ~m2;
+         cout << "diferencia " << d << endl;
+
+         //Desplazamos la mantisa
          carry = false;
-         int maux = sumaBinaria(comp.to_ulong(),1,23) ;
+         int exp = sumaBinaria((int) e2.to_ulong(),d, 8);
+         int dif = d;
+         if(d>0){
+             m2.operator >>=(1);
+             m2[22] = 1;
+              d--;
+         }
 
-         //Paso 5
-         bitset<23> ma(maux);
-           cout << "Mantisa comp 2 " << ma << endl;
-         //Paso 6
-         int aux = d;
-         if(aux>0){
-             g = ma[d-1];
-             aux--;
-         }
-         if (aux > 0){
-             r = ma [d-2];
-             aux--;
-         }
-         if(aux > 0){
-             aux = d;
-             //bool a = true;
-             int resta = 3;
-             while(aux > 0){
-                 bool p =ma[d-resta];
-                 cout << st << endl;
-
-                 st = st^p;
-                 aux--;
-                 resta++;
-             }
-         }
-         cout << "g " << g << "r " << r << "st " << st << endl;
-         //Paso 7
-         aux = d;
          for(int i=0;i<d;i++){
-             ma.operator >>=(1);
-             ma[22] = 1;
-         }
-         //Paso 8
-         carry = false;
-         int sum = sumaBinaria(m1.to_ulong(), ma.to_ulong(), 23);
-         bitset <23> maaux(sum);
-         ma = maaux;
-         cout << "Paso 8" << endl;
-         cout << ma << endl;
-         //Paso 9
-         if(ma[n-1]==1 && !carry){
-             cout << "Paso 9" << endl;
-             bitset <23> comp = ~ma;
-             carry = false;
-             int  rescom = sumaBinaria(comp.to_ulong(),1,23) ;
-             bitset <23> maaux(rescom);
-             ma = maaux;
-             cout << ma << endl;
+             m2.operator >>=(1);
          }
 
-         //Paso 10
-         cout << "Paso 10" << endl;
+         //Añadimos los hidden bits para sumar
+         bitset <24> sum1(m1.to_ulong());
+         bitset <24> sum2(m2.to_ulong());
+         cout << "operandos sin el bit" << endl;
+         cout << "m1" << sum1 << endl;
+         cout << "m2" << sum2 << endl;
 
-         int pos = 22;
-         int k=0;
-         while(!ma[pos]){
-             k++;
-             pos--;
-         }
-         if(k==0){
-             st = r^st;
-             r = g;
-             cout << g << endl;
-         }
-         if(k>0){
-             r = 0;
-             st = 0;
-         }
-         cout << ma << endl;
-         if(carry){
-             k= k-1;
-         }
-         for(int i=0;i<k;i++){
-             cout << "entro a desplazar" << endl;
-             ma =  ma.operator <<(1);
-         }
+         sum1[23] = 1;
+         if(dif==0) sum2[23] = 1;
+         cout << "operandos con el bit" << endl;
+         cout << "m1" << sum1 << endl;
+         cout << "m2" << sum2 << endl;
 
-         int exp = restaBinaria(e1.to_ulong(), k);
-          cout << k << endl;
-          cout << ma << endl;
-         //Paso 11
-          cout << "g " << g << "r " << r << "st " << st << endl;
+         //Restamos las mantisas
 
-         if ((r==1 && st==1) || (r==1 && st==0 && ma[0]==1)){
-             cout << "paso 11"<< endl;
-             carry = false;
-             int suma11 = sumaBinaria(ma.to_ulong(), 1, 23);
-             bitset <23> aux (suma11);
-             ma = aux;
-             if(carry){
-                 ma =  ma.operator >>(1);
-                 carry = false;
-                 exp = sumaBinaria(exp, 1, 8);
+         int mant = restaBinaria(sum1.to_ulong(), sum2.to_ulong());
+         bitset <24> maux (mant);
+         cout << "resultado de la resta " << maux << endl;
 
+         //Normalizamos
+         exp=0;
+         if(maux[23] == 1){
+             cout << "Esta normalizado" << endl;
+             bitset <8> er (e1.to_ulong());
+             exp = e1.to_ulong();
 
+         }else{
+             if(!iguales){
+                 //buscamos el primer 1
+                 cout << "no esta normalizado" << endl;
+                 int pos = 23;
+                 int k=0;
+                 cout << maux[pos] << endl;
+                 while(!maux[pos]){
+                     cout << maux[pos] << endl;
+
+                     pos--;
+                     k++;
+                 }
+                 cout << "posiciones a desplazar " << k << endl;
+                 for(int i=0;i<k;i++){
+
+                     maux = maux.operator <<(1);
+                 }
+                 cout << "mantisa desplazada " << maux << endl;
+
+                exp = restaBinaria(e1.to_ulong(),k);
              }
          }
 
+         maux[23] = 0;
+         bitset <23> ma(maux.to_ulong());
 
         bitset <8>  er(exp);
         cout << er << endl;
@@ -430,12 +341,18 @@ void coma_flotante::on_prod_clicked()
     //ESTO NO FUNCIONA
     int mant = multBinaria(m1.to_ulong(), m2.to_ulong());
     //mirar cuanto desplazar
-    bitset <24> m (mant);
+    bitset <24> maux (mant);
+    cout << "mantisa sin normlizar" <<maux << endl;
+    if(maux[23] == 1){
+        maux[23] =0;
+    }
+    bitset <23> m (maux.to_ulong());
+    cout << "mantisa normlizada" << m << endl;
     //exponente
     int e = sumaBinaria(e1.to_ulong(), e2.to_ulong(), 9);
     e = restaBinaria(e, 127);
     bitset <8> exp(e);
-    cout << exp << endl;
+    cout << "exponenete " <<exp << endl;
 
 
     j=0;
@@ -501,7 +418,27 @@ int coma_flotante:: sumaBinaria(int sum1, int sum2, int len){
     else if(len==8){
         bitset<8> res;
     }
+    if(len== 48){
+        bitset<48> res;
+        bitset<48> n1( sum1 );
+        bitset<48> n2( sum2 );
+        cout << n1 << endl;
+        cout << n2 << endl;
+        bool a, b;
+        //  bool carry = false;
+        for(int i=0;i<len;i++){
+            a=n1[i];
+            b=n2[i];
+            bool sum = (a ^ b) ^ carry;
+            carry = (a && b) || (a && carry) || (b && carry);
+            res[i]= sum;
 
+        }
+        cout << "resultado suma " << res << endl;
+        int resdec = res.to_ulong();
+        return resdec;
+
+   }
     bool a, b;
     //  bool carry = false;
     for(int i=0;i<len;i++){
@@ -512,10 +449,8 @@ int coma_flotante:: sumaBinaria(int sum1, int sum2, int len){
         res[i]= sum;
 
     }
-
+    cout << res << endl;
     int resdec = res.to_ulong();
-
-    cout << "resultado "<<carry << endl;
     return resdec;
 
 
@@ -557,33 +492,45 @@ int coma_flotante::multBinaria(int mult1, int mult2){
     x[23]= 1;
     y[23]= 1;
    // std::bitset tmp = x;
-    std::bitset<48> resbit;
-    int res =0;
+    std::bitset<48> resbit(0);
+    std::bitset<48> zeros(0);
+    std::bitset<48> aux (x.to_ulong());
+    cout << x << endl;
+    cout << y << endl;
+
+    cout << "auxuliar " << aux << endl;
     int tam = y.size();
-    cout << tam << endl;
 
     for(int i=0; i<24;i++){
         if(y[i]==0){
-            x = x.operator <<(1);
-
-         //   resbit = resbit.operator <<(1);
-            cout << resbit << endl;
         }else{
-            cout << "entro" << endl;
+            cout << "i " <<i << endl;
            // x = x.operator <<(1);
-            int temp = sumaBinaria (resbit.to_ulong(), x.to_ulong(),48);
-            std::bitset<48> tmp (temp);
-            cout << resbit << endl;
+            long long temp = sumaBinariaMult(resbit.to_ullong(), aux.to_ullong());
+            cout << "llego"<< endl;
 
+            std::bitset<48> tmp (temp);
             resbit  = tmp;
+            cout << "suma entero " <<temp << endl;
+
         }
+
+        aux = aux.operator <<=(1);
+
     }
     cout << resbit << endl;
+    resbit = resbit.operator >>(23);
+    cout << resbit << endl;
 
+    bitset <24> mant (resbit.to_ulong());
+    cout << mant << endl;
+
+    return resbit.to_ulong();
 
 }
 
 int  coma_flotante::toDecimal(int x){
+    cout << " valor " << x << endl;
     bitset<32> res(x);
     cout << res << endl;
     string binary = res.to_string<char, std::char_traits<char>, std::allocator<char> >();
@@ -610,6 +557,33 @@ int  coma_flotante::toDecimal(int x){
     float value = sign * (float) pow( 2.0, exponent ) * total;
 
     QString resdec = QString::number(value);
+    if(x == 0){
+        resdec = QString::number(x);
+
+    }
     ui->resdec->setText(resdec);
+
+}
+long long coma_flotante:: sumaBinariaMult(long long sum1, long long sum2){
+    bitset<48> num1( sum1 );
+    bitset<48> num2( sum2 );
+    bitset<48> res (0);
+    cout << num1 << endl;
+    cout << num2 << endl;
+
+    bool a, b;
+    //  bool carry = false;
+    for(int i=0;i<48;i++){
+        a=num1[i];
+        b=num2[i];
+        bool sum = (a ^ b) ^ carry;
+        carry = (a && b) || (a && carry) || (b && carry);
+        res[i]= sum;
+
+    }
+    cout << res << endl;
+    long long resdec = res.to_ullong();
+    return resdec;
+
 
 }
