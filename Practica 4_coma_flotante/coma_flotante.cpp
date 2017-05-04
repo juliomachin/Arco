@@ -37,15 +37,16 @@ void coma_flotante::on_pushButton_clicked()
 
     float variable1 = numero1.toFloat();
     //OBTENER VALOR EN COMA FLOTANTE
+
     string str1 = toFloatingPoint( (float)variable1);
     QString qstr1 = QString::fromStdString(str1);
     //GUARDAR NUMERO COMO BITSET ????
     std::bitset<32> set1(str1);
     n1 = set1;
     //GUARDAR NUMERO HEXADECIMAL
-    int hex1 = set1.to_ulong();
+    int hex1 ;
     QString hexnum1;
-    hexnum1=QString::number(hex1,16);
+    hexnum1 = QString::number(set1.to_ulong(), 16).toUpper();
 
 
     float variable2 = numero2.toFloat();
@@ -54,18 +55,17 @@ void coma_flotante::on_pushButton_clicked()
     std::bitset<32> set(str2);
 
     n2 = set;
+    int hex2 ;
+    QString hexnum2 ;
+    hexnum2 = QString::number(set.to_ulong(), 16).toUpper();
 
-    int hex2 = set.to_ulong();
-    QString hexnum2;
-
-    hexnum2=QString::number(hex2,16);
+    QString hex("0x"); //Añadir 0x
 
     //IMPRIMIR VALORES
     ui->numero1bin->setText(qstr1);
-    ui->numero1hex->setText(hexnum1);
+    ui->numero1hex->setText(hex.append(hexnum1));
     ui->numero2bin->setText(qstr2);
-
-    ui->numero2hex->setText(hexnum2);
+    ui->numero2hex->setText(hex.append(hexnum2));
 
 
 
@@ -411,7 +411,7 @@ void coma_flotante::on_division_clicked()
         j--;
     }
     //Comprobamos los tamaños
-   /* if(e1.operator ==(e2)){
+    if(e1.operator ==(e2)){
         if(m1.to_ulong()<m2.to_ulong()){
             bitset <23> aux = m1;
             m1 = m2;
@@ -423,34 +423,19 @@ void coma_flotante::on_division_clicked()
             e1 = e2;
             e2 = aux;
         }
-    }*/
+    }
     //Sacamos el signo del resultado
     sr =  s1^s2;
     //Hallamos el exponenete
     int er = restaBinaria(e1.to_ulong(), e2.to_ulong());
-    carry = false;
     er = sumaBinaria(er, 127, 8);
 
+    bitset<8> exp (er);
 
-
-    int div = divisionBinaria(m1.to_ulong(),m2.to_ulong());
     //Dividimos las mantisas
 
-    bitset <25> maux(div);
-    cout << maux << endl;
-    if(maux[24]==1){
-        cout << "ebtro" << endl;
-        maux[24] =0;
-        er = restaBinaria(er,1);
-        maux = maux.operator >>(1);
-    }else if(maux[23] == 1){
-        maux[23] =0;
-    }
-    bitset <23> m (maux.to_ulong());
 
-    bitset<8> exp (er);
-    cout << "exponente "<< exp << endl;
-
+/*
     j=0;
     for(int i=0;i<23;i++){
         res[i] = m[j];
@@ -469,8 +454,7 @@ void coma_flotante::on_division_clicked()
     ui->reshex->setText(hexnum);
     //Expresamos resultado en decimal
     int a = toDecimal(hex);
-
-
+*/
 
 }
 bool coma_flotante:: comparar(bitset<8> exp1, bitset<8> exp2){
@@ -676,145 +660,22 @@ long long coma_flotante:: sumaBinariaMult(long long sum1, long long sum2){
 
 
 }
-int coma_flotante:: divisionBinaria(int D, int d){
+int divisionBinaria(int D, int d){
     bitset <24> div1 (D);
-    bitset <24> div1aux (D);
-
     bitset <24> div2 (d);
     div1[23]= 1;
     div2[23]= 1;
     bitset <24> aux(0);
-    bitset <24> res(0);
-
     int k=0;
     //Calculamos los bits efectivos
-    for(int i=0;i<24;i++){
-        if(div2[i]==1){
+    /*for(int i=0;i<24;i++){
+        if(div[i]==1){
             k = 24 -i;
             break;
         }
     }
-    cout <<"K: "<< k<< endl;
-
-    int p=0;
-    //Calculamos los bits efectivos
-    for(int i=0;i<24;i++){
-        if(div1[i]==1){
-            p = 24 -i;
-            break;
-        }
-    }
-    cout <<"P: "<< p<< endl;
     int kaux = k;
-
-    int resta = 0;
-    int bits = 0;
-    int bitsres = 23;
-    int primera =0;
     for(int i=23;i>=0;i--){
-         if(kaux>0){
-             aux[i]= div1[i];
-             kaux--;
-             bits++;
-         }
-     }
-    int posdesp=0;
-    bool des = false;
-    while(bits < p){
-        //bajamos k bit
-        if(primera!=0){
-            aux[23-bits] = div1[23-bits];
-            bits++;
-        }
-        cout << "1 PASO"<< aux << endl;
 
-        //desplazamos
-        posdesp = 0;
-        for(int i=23;i>=0;i--){
-            if(aux[i]==0){
-
-                aux = aux.operator <<(1);
-                posdesp++;
-               // cout << aux << endl;
-                if(posdesp==23){
-                    posdesp=0;
-                    break;
-                }i++;
-            }else{
-                break;
-            }
-        }
-        cout << "2 PASO"<< aux << endl;
-
-        //comprobamos tamaño
-        int desp  = 0;
-        cout << "desplazamientoo "<<posdesp << endl;
-        des = false;
-        while(aux.to_ulong()<div2.to_ulong()){
-            aux = aux.operator >>(posdesp);
-            cout << bits << endl;
-            cout <<"Volvemos a desplazar" << aux << endl;
-            aux[23-bits] =div1[23-bits];
-            cout << "con nuevo bit: "<<aux << endl;
-
-            bits++;
-            if(bits==24)
-                break;
-            desp++;
-            res[bitsres] = 0;
-            bitsres--;
-            aux = aux.operator <<(posdesp);
-            if(posdesp==0){
-                 div2 = div2.operator >>(1);
-                 des = true;
-            }
-             cout <<"Recolocamos para comparar" << aux << endl;
-
-
-        }
-
-
-        cout << "3 PASO"<< aux << endl;
-        //div2 = div2.operator <<(1);
-
-       //restamos
-        res[bitsres] = 1;
-        bitsres--;
-        resta = restaBinaria(aux.to_ulong(),div2.to_ulong());
-        bitset <24> nuevo (resta);
-        aux = resta;
-        if(des)
-            div2 = div2.operator <<(desp);
-        cout << "resultado de la resta "<< aux << endl;
-        cout << "resultado "<< res << endl;
-        primera++;
-
-
-
-        }
-        //
-       /* aux.reset();
-        kaux = k;
-        for(int i=23;i>=0;i--){
-            if(kaux>0){
-                 aux[i]= div1[i-bits];
-                 kaux--;
-                 bits++;
-
-            }
-        }
-        cout << aux << endl;
-        if(aux.to_ulong()>=div2.to_ulong()){
-            res[bitsres] = 1;
-            bitsres--;
-            resta =
-        }else{
-            aux[23-k] =div1[23-bits];
-            bits++;
-
-        }
     }*/
-    return res.to_ulong();
-
 }
-
