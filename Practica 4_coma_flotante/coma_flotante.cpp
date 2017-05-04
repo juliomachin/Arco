@@ -43,9 +43,9 @@ void coma_flotante::on_pushButton_clicked()
     std::bitset<32> set1(str1);
     n1 = set1;
     //GUARDAR NUMERO HEXADECIMAL
-    int hex1 = set1.to_ulong();
+    int hex1 ;
     QString hexnum1;
-    hexnum1=QString::number(hex1,16);
+    hexnum1 = QString::number(set1.to_ulong(), 16).toUpper();
 
 
     float variable2 = numero2.toFloat();
@@ -54,11 +54,10 @@ void coma_flotante::on_pushButton_clicked()
     std::bitset<32> set(str2);
 
     n2 = set;
+    int hex2 ;
+    QString hexnum2 ;
+    hexnum2 = QString::number(set.to_ulong(), 16).toUpper();
 
-    int hex2 = set.to_ulong();
-    QString hexnum2;
-
-    hexnum2=QString::number(hex2,16);
 
     //IMPRIMIR VALORES
     ui->numero1bin->setText(qstr1);
@@ -454,7 +453,6 @@ void coma_flotante::on_division_clicked()
     ui->reshex->setText(hexnum);
     //Expresamos resultado en decimal
     int a = toDecimal(hex);
-
 */
 
 }
@@ -669,7 +667,7 @@ int divisionBinaria(int D, int d){
     bitset <24> aux(0);
     int k=0;
     //Calculamos los bits efectivos
-    for(int i=0;i<24;i++){
+    /*for(int i=0;i<24;i++){
         if(div[i]==1){
             k = 24 -i;
             break;
@@ -678,6 +676,5 @@ int divisionBinaria(int D, int d){
     int kaux = k;
     for(int i=23;i>=0;i--){
 
-    }
+    }*/
 }
-
