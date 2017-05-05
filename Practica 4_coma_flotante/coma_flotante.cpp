@@ -37,15 +37,16 @@ void coma_flotante::on_pushButton_clicked()
 
     float variable1 = numero1.toFloat();
     //OBTENER VALOR EN COMA FLOTANTE
+
     string str1 = toFloatingPoint( (float)variable1);
     QString qstr1 = QString::fromStdString(str1);
     //GUARDAR NUMERO COMO BITSET ????
     std::bitset<32> set1(str1);
     n1 = set1;
     //GUARDAR NUMERO HEXADECIMAL
-    int hex1 = set1.to_ulong();
+    int hex1 ;
     QString hexnum1;
-    hexnum1=QString::number(hex1,16);
+    hexnum1 = QString::number(set1.to_ulong(), 16).toUpper();
 
 
     float variable2 = numero2.toFloat();
@@ -54,23 +55,19 @@ void coma_flotante::on_pushButton_clicked()
     std::bitset<32> set(str2);
 
     n2 = set;
+    int hex2 ;
+    QString hexnum2 ;
+    hexnum2 = QString::number(set.to_ulong(), 16).toUpper();
 
-    int hex2 = set.to_ulong();
-    QString hexnum2;
-
-    hexnum2=QString::number(hex2,16);
+    QString hex("0x"); //Añadir 0x
 
     //IMPRIMIR VALORES
     ui->numero1bin->setText(qstr1);
-    ui->numero1hex->setText(hexnum1);
+    ui->numero1hex->setText(hex.append(hexnum1));
     ui->numero2bin->setText(qstr2);
+    ui->numero2hex->setText(hex.append(hexnum2));
 
-    ui->numero2hex->setText(hexnum2);
-
-
-
-}
-
+    
 string coma_flotante::toFloatingPoint(float variable){
     union
     {
