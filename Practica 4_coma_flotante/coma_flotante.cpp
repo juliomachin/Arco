@@ -59,13 +59,13 @@ void coma_flotante::on_pushButton_clicked()
     QString hexnum2 ;
     hexnum2 = QString::number(set.to_ulong(), 16).toUpper();
 
-    QString hex("0x"); //Añadir 0x
+    QString aux2("0x"); //Añadir 0x
 
     //IMPRIMIR VALORES
     ui->numero1bin->setText(qstr1);
-    ui->numero1hex->setText(hex.append(hexnum1));
+    ui->numero1hex->setText(aux2.append(hexnum1));
     ui->numero2bin->setText(qstr2);
-    ui->numero2hex->setText(hex.append(hexnum2));
+    ui->numero2hex->setText(aux2.append(hexnum2));
 
     
 string coma_flotante::toFloatingPoint(float variable){
