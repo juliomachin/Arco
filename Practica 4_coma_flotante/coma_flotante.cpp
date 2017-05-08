@@ -66,8 +66,8 @@ void coma_flotante::on_pushButton_clicked()
     ui->numero1hex->setText(aux2.append(hexnum1));
     ui->numero2bin->setText(qstr2);
     ui->numero2hex->setText(aux2.append(hexnum2));
+}
 
-    
 string coma_flotante::toFloatingPoint(float variable){
     union
     {
@@ -166,7 +166,8 @@ void coma_flotante::on_suma_clicked()
         int hex = res.to_ulong();
         QString hexnum;
         hexnum=QString::number(hex,16);
-        ui->reshex->setText(hexnum);
+        QString aux2("0x"); //Añadir 0x
+        ui->reshex->setText(aux2.append(hexnum));
         //Expresamos resultado en decimal
         int a = toDecimal(hex);
     }else{
@@ -304,7 +305,8 @@ void coma_flotante::on_suma_clicked()
         int hex = res.to_ulong();
         QString hexnum;
         hexnum=QString::number(hex,16);
-        ui->reshex->setText(hexnum);
+        QString aux2("0x"); //Añadir 0x
+        ui->reshex->setText(aux2.append(hexnum));
         //Expresamos resultado en decimal
         int a = toDecimal(hex);
 
@@ -376,7 +378,8 @@ void coma_flotante::on_prod_clicked()
     int hex = res.to_ulong();
     QString hexnum;
     hexnum=QString::number(hex,16);
-    ui->reshex->setText(hexnum);
+    QString aux2("0x"); //Añadir 0x
+    ui->reshex->setText(aux2.append(hexnum));
     //Expresamos resultado en decimal
     int a = toDecimal(hex);
 
@@ -468,7 +471,8 @@ void coma_flotante::on_division_clicked()
     int hex = res.to_ulong();
     QString hexnum;
     hexnum=QString::number(hex,16);
-    ui->reshex->setText(hexnum);
+    QString aux2("0x"); //Añadir 0x
+    ui->reshex->setText(aux2.append(hexnum));
     //Expresamos resultado en decimal
     int a = toDecimal(hex);
 
@@ -811,7 +815,6 @@ int coma_flotante:: divisionBinaria(int D, int d){
                  aux[i]= div1[i-bits];
                  kaux--;
                  bits++;
-
             }
         }
         cout << aux << endl;
@@ -822,10 +825,11 @@ int coma_flotante:: divisionBinaria(int D, int d){
         }else{
             aux[23-k] =div1[23-bits];
             bits++;
-
         }
     }*/
     return res.to_ulong();
-
 }
+
+
+
 
