@@ -20,10 +20,14 @@ public:
 
     int sumaBinaria(int sum1, int sum2, int len);
     int restaBinaria(int sum1, int sum2);
-    int toDecimal(int x);
+    float toDecimal(int x);
     int multBinaria(int mult1, int mult2);
     long long sumaBinariaMult(long long sum1, long long sum2);
     int divisionBinaria(int D, int d);
+
+    int mult(int num1, int num2);
+    int sum(int num1, int num2);
+
 
 
 private slots:
