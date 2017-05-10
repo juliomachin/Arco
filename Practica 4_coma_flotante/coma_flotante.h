@@ -27,6 +27,8 @@ public:
 
     int mult(int num1, int num2);
     int sum(int num1, int num2);
+    bool comprobarDecimales(int i1, int i2);
+    bool comprobarPrueba(int i1, int i2);
 
 
 
@@ -43,6 +45,11 @@ private:
     Ui::coma_flotante *ui;
     bitset<32> n1;
     bitset <32> n2;
+    bitset<32> auxn1;
+    bitset <32> auxn2;
+    bitset <32> n2aux2;
+    bitset <32> resultadop;
+
     bool carry;
 
 };
