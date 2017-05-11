@@ -99,7 +99,13 @@ string coma_flotante::toFloatingPoint(float variable){
 void coma_flotante::on_suma_clicked()
 {
     bitset <23> zeros (0);
-        if(n1 ==0){
+         if(n2 == 0 && n1 == 0){
+               int hex = n1.to_ulong();
+               QString hexnum;
+               hexnum=QString::number(hex,16);
+               ui->reshex->setText(hexnum);
+               int a = toDecimal(hex);
+        }else if(n1 ==0){
             int hex = n2.to_ulong();
             QString hexnum;
             hexnum=QString::number(hex,16);
@@ -115,11 +121,8 @@ void coma_flotante::on_suma_clicked()
             ui->reshex->setText(aux2.append(hexnum));
             //Expresamos resultado en decimal
             int a = toDecimal(hex);
-        }else if(n2 == n1 == 0){
-            int hex = n1.to_ulong();
-            QString hexnum;
-            hexnum=QString::number(hex,16);
-            ui->reshex->setText(hexnum);
+
+
             //Expresamos resultado en
         }else{
 
@@ -337,7 +340,7 @@ void coma_flotante::on_suma_clicked()
         int a = toDecimal(hex);
 
 }
-    }
+  }
 
 }
 //PRODUCTO
